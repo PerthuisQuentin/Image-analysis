@@ -117,6 +117,6 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
     );
 });
 
-Log.verbose('Loaded : [VIEW][GET] /face-detection');
+Log.verbose('Loaded : [API][POST] /face-detection-upload');
 
 export default router;
