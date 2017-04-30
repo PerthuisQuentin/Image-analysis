@@ -14,6 +14,11 @@ router.get('/face-detection', function(request: any, response: any) {
     response.render('face-detection');
 });
 
+router.get('/webcamCapture', function(request: any, response: any) {
+    response.render('webcamCapture');
+});
+Log.verbose('Loaded : [VIEW][GET] /webcamCapture');
+
 Log.verbose('Loaded : [VIEW][GET] /face-detection');
 
 export default router;
