@@ -10,4 +10,10 @@ router.get('/', function(request: any, response: any) {
 
 Log.verbose('Loaded : [VIEW][GET] /');
 
+router.get('/face-detection', function(request: any, response: any) {
+    response.render('face-detection');
+});
+
+Log.verbose('Loaded : [VIEW][GET] /face-detection');
+
 export default router;

@@ -2,3 +2,5 @@ node_modules/
 *.log
 config.prod.yml
 config.dev.yml
+uploads/
+public/result

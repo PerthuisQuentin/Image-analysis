@@ -15,7 +15,12 @@
 		"express-handlebars" : "3.0.x",
 		"boom": "4.3.x",
 		"winston": "2.3.x",
-		"js-yaml": "3.8.x"
+		"js-yaml": "3.8.x",
+		"lodash": "4.17.x",
+		"multer": "1.3.x",
+		"easyimage": "2.1.x",
+		"async": "2.4.x",
+		"opencv": "6.0.x"
 	},
   	"devDependencies": {
 		"@types/node": "7.0.x",
