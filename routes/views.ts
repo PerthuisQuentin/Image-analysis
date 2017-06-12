@@ -16,4 +16,10 @@ router.get('/face-detection', function(request: any, response: any) {
 
 Log.verbose('Loaded : [VIEW][GET] /face-detection');
 
+router.get('/usb-detection', function(request: any, response: any) {
+    response.render('usb-detection');
+});
+
+Log.verbose('Loaded : [VIEW][GET] /usb-detection');
+
 export default router;

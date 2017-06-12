@@ -17,9 +17,14 @@ var exts: any = {
   'image/gif' : '.gif'
 };
 
-router.post('/face-detection-upload', upload.single('file'), function(request: any, response: any, next: any) {
+var detections: any = {
+    face: OpenCV.FACE_CASCADE,
+    usb: "./classifier/usb.xml"
+};
 
-    Log.debug('New request on /face-detection');
+router.post('/detection-upload', upload.single('file'), function(request: any, response: any, next: any) {
+
+    Log.debug('New request on /detection');
 
     // Generate a filename; just use the one generated for us, plus the appropriate extension
     var filename = request.file.filename + exts[request.file.mimetype];
@@ -37,7 +42,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
                 /**
                  * Check the mimetype to ensure the uploaded file is an image
                  */
-                 Log.debug('[face-detection] Check MIME type');
+                 Log.debug('[detection] Check MIME type');
 
                 if(!_.includes(['image/jpeg', 'image/png', 'image/gif'], request.file.mimetype)) {
                     return callback( new Error( 'Invalid file - please upload an image (.jpg, .png, .gif).' ) )
@@ -49,7 +54,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
                 /**
                  * Get some information about the uploaded file
                  */
-                 Log.debug('[face-detection] Check image size');
+                 Log.debug('[detection] Check image size');
 
                 Easyimg.info(src)
                     .then(function(file: any) {
@@ -67,7 +72,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
                 /**
                  * Resize the image to a sensible size
                  */
-                Log.debug('[face-detection] Resize image');
+                Log.debug('[detection] Resize image');
 
                 Easyimg.resize({
                         width      :   960,
@@ -82,7 +87,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
                 /**
                  * Use OpenCV to read the (resized) image
                  */
-                 Log.debug('[face-detection] Read image');
+                 Log.debug('[detection] Read image');
 
                 OpenCV.readImage(dst, callback);
             },
@@ -90,9 +95,15 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
                 /**
                  * Run the face detection algorithm
                  */
-                 Log.debug('[face-detection] Detect faces');
+                Log.debug('[detection] Detect faces');
 
-                im.detectObject(OpenCV.FACE_CASCADE, {}, callback);
+                console.log(detections[request.body.detection]);
+
+                if(!detections[request.body.detection]) {
+                    return response.render('error', { message : "Invalid detection" });
+                }
+
+                im.detectObject(detections[request.body.detection], {}, callback);
             }
         ],
         function(err: any, faces: any) {
@@ -100,7 +111,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
              * If an error occurred somewhere along the way, render the
              * error page.
              */
-             Log.debug('[face-detection] Final callback');
+             Log.debug('[detection] Final callback');
 
             if(err) {
                 return response.render('error', { message : err.message });
@@ -109,7 +120,7 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
             /**
              * We're all good; render the result page.
              */
-            return response.render('face-detection-result', {
+            return response.render('detection-result', {
                 filename   :   filename,
                 faces     :   faces
             });
@@ -117,6 +128,6 @@ router.post('/face-detection-upload', upload.single('file'), function(request: a
     );
 });
 
-Log.verbose('Loaded : [VIEW][GET] /face-detection');
+Log.verbose('Loaded : [VIEW][GET] /detection');
 
 export default router;
